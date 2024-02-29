@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <!-- Add any necessary styling here -->
+</head>
+<body>
+    <div>
+        <h1>Chatbot</h1>
+        <div id="chat-container">
+            <!-- Display chat history and response -->
+            <div id="chat-history">
+                <!-- Previous chat messages can be displayed here -->
+            </div>
+            <div id="chat-response">
+                {{ response }}
+            </div>
+        </div>
+        <div>
+            <input type="text" id="user-input" />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var user_input = document.getElementById('user-input').value;
+            document.getElementById('user-input').value = '';
+
+            // Send the user input to the server using Fetch API
+            fetch('/chatbot/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'user_input=' + encodeURIComponent(user_input),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the chat response on the page
+                document.getElementById('chat-response').innerHTML = data.response;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
